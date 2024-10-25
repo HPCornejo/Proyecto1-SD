@@ -48,7 +48,7 @@ def crear_bucket(name, region="us-east-2"):
         print(f"El bucket no se creó: {str(e)}")
 
 bucket = 'sd-biblioteca'
-region = 'us-east-2'
+
 #crear_bucket(bucket, 'us-east-2')
 
 # Añadir objetos a un bucket de S3
@@ -234,8 +234,8 @@ async def añadir_libro(libro: Libros, file: UploadFile = File(None)):
             raise HTTPException(status_code=400, detail="El archivo debe ser una imagen.")
         
         try:
-            object_name = f"Portadas/{file.filename}"
-            url = subir_objetos(file, bucket)
+            object_name = f"Libros/{file.filename}"
+            url = subir_objetos(file, bucket, object_name)
             libro.imagen_portada = url  
         except NoCredentialsError:
             raise HTTPException(status_code=403, detail="No se encontraron credenciales de AWS.")
@@ -260,7 +260,7 @@ async def actualizar_libro(lib_id: str, lib: Libros, file: UploadFile = File(Non
                     buffer.write(await file.read())
                 subir_objetos(file.filename, bucket, object_name)
                 # Actualizar la URL de la imagen de portada en el libro
-                lib.imagen_portada = f"https://{bucket}.s3.{region}.amazonaws.com/{object_name}"
+                lib.imagen_portada = f"https://{bucket}.s3.amazonaws.com/{object_name}"
             
             await libro_collection.update_one(_lib, {'$set': lib.dict()})
             return{
@@ -375,7 +375,7 @@ async def crear_prestamo(pre: Prestamos, file: UploadFile = File(...)):
     with open(file.filename, "wb") as buffer:
         buffer.write(await file.read())
     subir_objetos(file.filename, bucket, object_name)
-    pre.foto_credencial = f"https://{bucket}.s3.{region}.amazonaws.com/{object_name}"
+    pre.foto_credencial = f"https://{bucket}.s3.amazonaws.com/{object_name}"
 
     # Guardar el préstamo
     await prestamo_collection.insert_one(pre.dict())
