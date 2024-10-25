@@ -1,0 +1,40 @@
+[{
+  "_id": {
+    "$oid": "6715c0c1a801038dd4210fff"
+  },
+  "nombre": "Juan",
+  "apellido": "Rodríguez",
+  "correo": "jr@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "67170f4ebd195c90bdda28d5"
+  },
+  "nombre": "Efrain",
+  "apellido": "Castro",
+  "correo": "ec@hotmail.com"
+},
+{
+  "_id": {
+    "$oid": "671b9ad721723952589daafd"
+  },
+  "nombre": "Diego",
+  "apellido": "Garcia",
+  "correo": "diegar@outlook.com"
+},
+{
+  "_id": {
+    "$oid": "671b9b5921723952589daafe"
+  },
+  "nombre": "Daniel",
+  "apellido": "Rodríguez",
+  "correo": "drod@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "671b9b7621723952589daaff"
+  },
+  "nombre": "Héctor",
+  "apellido": "Cornejo",
+  "correo": "hecor@gmail.com"
+}]

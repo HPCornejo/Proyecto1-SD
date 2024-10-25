@@ -1,0 +1,40 @@
+[{
+  "_id": {
+    "$oid": "6715c058a801038dd4210ffd"
+  },
+  "nombre": "Edgar",
+  "apellido": "Ramos",
+  "biografia": "Vivio una larga vida y fallecio en..."
+},
+{
+  "_id": {
+    "$oid": "6716f1d3a6bc58ffe4eb6867"
+  },
+  "nombre": "Aurelio",
+  "apellido": "Flores",
+  "biografia": "Nacio en..."
+},
+{
+  "_id": {
+    "$oid": "671b99da21723952589daaf9"
+  },
+  "nombre": "Froylan",
+  "apellido": "Villegas",
+  "biografia": "Nacio en ... y fallecio en ..."
+},
+{
+  "_id": {
+    "$oid": "671b9a3b21723952589daafa"
+  },
+  "nombre": "Cesar",
+  "apellido": "Moncivais",
+  "biografia": "LLego a tener el bigote más largo de todo el mundo"
+},
+{
+  "_id": {
+    "$oid": "671b9a8d21723952589daafb"
+  },
+  "nombre": "Isay",
+  "apellido": "Montejano",
+  "biografia": "Nacio en Fresnillo y se hizo millonario vendiendo ropa"
+}]
