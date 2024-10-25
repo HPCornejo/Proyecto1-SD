@@ -1,41 +1,11 @@
 [{
   "_id": {
-    "$oid": "6715c424a801038dd421100d"
-  },
-  "titulo": "Hábitos atómicos",
-  "autor_id": 1,
-  "descripcion": "Este libro trata de...",
-  "imagen_portada": "https://sd-biblioteca.s3.us-east-2.amazonaws.com/Libros/H%C3%A1bitos+at%C3%B3micos.jpg",
-  "inventario": true
-},
-{
-  "_id": {
-    "$oid": "671a8d95de96145909c9a767"
-  },
-  "titulo": "El buen cirujano",
-  "autor_id": 2,
-  "descripcion": "Este libro trata de...",
-  "imagen_portada": "https://sd-biblioteca.s3.us-east-2.amazonaws.com/Libros/El+buen+cirujano.jpg",
-  "inventario": true
-},
-{
-  "_id": {
-    "$oid": "671b9da121723952589dab0c"
-  },
-  "titulo": "El quinto infierno",
-  "autor_id": 3,
-  "descripcion": "Este libro nos habla de...",
-  "imagen_portada": "https://sd-biblioteca.s3.us-east-2.amazonaws.com/Libros/El+quinto+infierno.jpg",
-  "inventario": true
-},
-{
-  "_id": {
     "$oid": "671b9e5321723952589dab0d"
   },
   "titulo": "El comienzo",
   "autor_id": 4,
   "descripcion": "Este libro nos cuenta...",
-  "imagen_portada": "https://sd-biblioteca.s3.us-east-2.amazonaws.com/Libros/El+comienzo.jpg",
+  "imagen_portada": "https://sd-biblioteca.s3.us-east-2.amazonaws.com/Libros/El_comienzo.jpg",
   "inventario": true
 },
 {
@@ -45,6 +15,36 @@
   "titulo": "Laberinto de los susurros",
   "autor_id": 5,
   "descripcion": "Este libro nos narra...",
-  "imagen_portada": "https://sd-biblioteca.s3.us-east-2.amazonaws.com/Libros/El+laberinto+de+los+susurros.jpg",
+  "imagen_portada": "https://sd-biblioteca.s3.us-east-2.amazonaws.com/Libros/El_laberinto_de_los_susurros.jpg",
+  "inventario": true
+},
+{
+  "_id": {
+    "$oid": "6715c424a801038dd421100d"
+  },
+  "titulo": "Hábitos atómicos",
+  "autor_id": 1,
+  "descripcion": "Este libro trata de...",
+  "imagen_portada": "https://sd-biblioteca.s3.us-east-2.amazonaws.com/Libros/Habitos_atomicos.jpg",
+  "inventario": true
+},
+{
+  "_id": {
+    "$oid": "671b9da121723952589dab0c"
+  },
+  "titulo": "El quinto infierno",
+  "autor_id": 3,
+  "descripcion": "Este libro nos habla de...",
+  "imagen_portada": "https://sd-biblioteca.s3.us-east-2.amazonaws.com/Libros/El_quinto_infierno.jpg",
+  "inventario": true
+},
+{
+  "_id": {
+    "$oid": "671a8d95de96145909c9a767"
+  },
+  "titulo": "El buen cirujano",
+  "autor_id": 2,
+  "descripcion": "Este libro trata de...",
+  "imagen_portada": "https://sd-biblioteca.s3.us-east-2.amazonaws.com/Libros/El_buen_cirujano.jpg",
   "inventario": true
 }]
