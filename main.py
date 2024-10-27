@@ -96,7 +96,7 @@ class Bibliotecarios(BaseModel):
 
 class Libros(BaseModel):
     titulo: str
-    autor_id: int
+    autor_id: str
     descripcion: str
     imagen_portada: Optional[str] = None
     inventario: bool
@@ -107,12 +107,12 @@ class Lectores(BaseModel):
     correo: str
 
 class Prestamos(BaseModel):
-    lector_id: int
-    libro_id: int
-    fecha_prestamo: date
-    fecha_devolucion: date
-    bibliotecario_id: int
-    foto_credencial: str
+    lector_id: str
+    libro_id: str
+    bibliotecario_id: str
+    fecha_prestamo: Optional[datetime] = None
+    fecha_devolucion: Optional[datetime] = None
+    foto_credencial: Optional[str] = None
 
 
 # -------------------------------- AUTORES --------------------------------
@@ -229,10 +229,20 @@ async def get_libro_id(lib_id):
 # Añadir un libro
 @app.post('/libro/')
 async def añadir_libro(libro: Libros, file: UploadFile = File(None)):
+    # Validar autor_id como ObjectId y verificar si el autor existe en la base de datos
+    try:
+        autor_id = ObjectId(libro.autor_id)
+    except:
+        raise HTTPException(status_code=400, detail="ID del autor debe ser un ID válido")
+    
+    autor = await autor_collection.find_one({"_id": autor_id})
+    if not autor:
+        raise HTTPException(status_code=404, detail="Autor no encontrado")
+
+    # Si se proporciona una imagen, subirla a S3
     if file:
         if not file.content_type.startswith('image/'):
             raise HTTPException(status_code=400, detail="El archivo debe ser una imagen.")
-        
         try:
             object_name = f"Libros/{file.filename}"
             url = subir_objetos(file, bucket, object_name)
@@ -242,30 +252,50 @@ async def añadir_libro(libro: Libros, file: UploadFile = File(None)):
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
-    libro_dict = libro.dict()
-    await libro_collection.insert_one(libro_dict)
+    # Insertar el libro en la base de datos
+    libro_data = libro.dict()
+    libro_data["autor_id"] = autor_id
+    await libro_collection.insert_one(libro_data)
     return libro
             
 
-# Actualizar libro por ID
 @app.put('/libro/{lib_id}')
 async def actualizar_libro(lib_id: str, lib: Libros, file: UploadFile = File(None)):
-    libros = await libro_collection.find().to_list(None)
-    for _lib in libros:
-        if str(_lib['_id']) == lib_id:
-            if file:
-                # Subir nueva imagen de portada a S3
-                object_name = f"Libros/{file.filename}"
-                with open(file.filename, "wb") as buffer:
-                    buffer.write(await file.read())
-                subir_objetos(file.filename, bucket, object_name)
-                # Actualizar la URL de la imagen de portada en el libro
-                lib.imagen_portada = f"https://{bucket}.s3.amazonaws.com/{object_name}"
-            
-            await libro_collection.update_one(_lib, {'$set': lib.dict()})
-            return{
-                'message': f'El libro con ID {lib_id} se actualizó exitosamente'
-            }
+    # Validar y convertir lib_id a ObjectId
+    try:
+        libro_id = ObjectId(lib_id)
+    except:
+        raise HTTPException(status_code=400, detail="ID del libro debe ser un ObjectId válido")
+
+    # Verificar si el libro existe
+    libro = await libro_collection.find_one({"_id": libro_id})
+    if not libro:
+        raise HTTPException(status_code=404, detail="Libro no encontrado")
+
+    # Validar y convertir autor_id a ObjectId, y verificar si el autor existe
+    try:
+        autor_id = ObjectId(lib.autor_id)
+    except:
+        raise HTTPException(status_code=400, detail="ID del autor debe ser un ObjectId válido")
+
+    autor = await autor_collection.find_one({"_id": autor_id})
+    if not autor:
+        raise HTTPException(status_code=404, detail="Autor no encontrado")
+
+    # Si se proporciona un archivo de imagen, actualizar la imagen de portada en S3
+    if file:
+        if not file.content_type.startswith('image/'):
+            raise HTTPException(status_code=400, detail="El archivo debe ser una imagen.")
+        object_name = f"Libros/{file.filename}"
+        url = subir_objetos(file, bucket, object_name)
+        lib.imagen_portada = url
+
+    # Actualizar el libro en la base de datos
+    libro_data = lib.dict()
+    libro_data["autor_id"] = autor_id  # Asignar el ObjectId al campo autor_id
+    await libro_collection.update_one({"_id": libro_id}, {'$set': libro_data})
+    
+    return {'message': f'El libro con ID {lib_id} se actualizó exitosamente'}
 
 # Eliminar libro por ID
 @app.delete('/libro/{lib_id}')
@@ -353,55 +383,65 @@ async def get_prestamo_id(pre_id):
             pre['_id'] = str(pre['_id']) 
             return pre
 
-# Crear un préstamo
 @app.post('/prestamo/')
 async def crear_prestamo(pre: Prestamos, file: UploadFile = File(...)):
-    libro = await libro_collection.find_one({"_id": pre.libro_id})
-    
+    # Convertir los IDs de lector, libro y bibliotecario a ObjectId
+    try:
+        lector_id = ObjectId(pre.lector_id)
+        libro_id = ObjectId(pre.libro_id)
+        bibliotecario_id = ObjectId(pre.bibliotecario_id)
+    except:
+        raise HTTPException(status_code=400, detail="IDs deben ser válidos ObjectId")
+
+    # Verificar si el libro existe y está en inventario
+    libro = await libro_collection.find_one({"_id": libro_id})
     if not libro:
         raise HTTPException(status_code=404, detail="Libro no encontrado")
-    
     if not libro['inventario']:
         raise HTTPException(status_code=400, detail="Libro no disponible en inventario")
 
-    # Actualizar el inventario del libro
-    await libro_collection.update_one({"_id": pre.libro_id}, {"$set": {"inventario": False}})
+    # Actualizar inventario del libro
+    await libro_collection.update_one({"_id": libro_id}, {"$set": {"inventario": False}})
 
-    # Establecer la fecha de devolución
-    pre.fecha_devolucion = datetime.utcnow() + timedelta(days=3)
+    # Establecer las fechas de préstamo y devolución
+    pre.fecha_prestamo = datetime.utcnow()
+    pre.fecha_devolucion = pre.fecha_prestamo + timedelta(days=3)
 
     # Subir foto de credencial a S3
-    object_name = f"Credenciales/{file.filename}"
-    with open(file.filename, "wb") as buffer:
-        buffer.write(await file.read())
-    subir_objetos(file.filename, bucket, object_name)
-    pre.foto_credencial = f"https://{bucket}.s3.amazonaws.com/{object_name}"
+    imagen_url = subir_objetos(file, bucket, "Credenciales")
+    pre.foto_credencial = imagen_url
 
-    # Guardar el préstamo
-    await prestamo_collection.insert_one(pre.dict())
-    return {
-        'message': "El préstamo se realizó exitosamente"
-    }
+    # Guardar el préstamo en la base de datos
+    prestamo_data = pre.dict()
+    prestamo_data.update({
+        "lector_id": lector_id,
+        "libro_id": libro_id,
+        "bibliotecario_id": bibliotecario_id
+    })
+    await prestamo_collection.insert_one(prestamo_data)
+    return {"message": "El préstamo se realizó exitosamente"}
 
-# Devolver un préstamo
 @app.put('/prestamo/{pre_id}/devolver')
 async def devolver_prestamo(pre_id: str):
-    prestamo = await prestamo_collection.find_one({"_id": ObjectId(pre_id)})
-    
+    # Verificar si el préstamo existe
+    try:
+        prestamo_id = ObjectId(pre_id)
+    except:
+        raise HTTPException(status_code=400, detail="ID de préstamo debe ser un ObjectId válido")
+
+    prestamo = await prestamo_collection.find_one({"_id": prestamo_id})
     if not prestamo:
         raise HTTPException(status_code=404, detail="Préstamo no encontrado")
 
-    # Actualizar el inventario del libro
+    # Actualizar inventario del libro
     await libro_collection.update_one({"_id": prestamo['libro_id']}, {"$set": {"inventario": True}})
 
-    # Eliminar el préstamo
-    await prestamo_collection.delete_one({"_id": ObjectId(pre_id)})
-    # Si el prestamo tiene una imagen en S3, elimínala
+    # Eliminar el registro del préstamo en la base de datos
+    await prestamo_collection.delete_one({"_id": prestamo_id})
+
+    # Eliminar la foto de credencial en S3, si existe
     if prestamo.get('foto_credencial'):
-        # Extrae el nombre del archivo de la URL de S3
         object_name = prestamo['foto_credencial'].split('/')[-1]
         eliminar_objeto(bucket, f"Credenciales/{object_name}")
-    
-    return {
-        'message': "El préstamo ha sido devuelto y el libro está de nuevo en inventario"
-    }
+
+    return {"message": "El préstamo ha sido devuelto y el libro está de nuevo en inventario"}
