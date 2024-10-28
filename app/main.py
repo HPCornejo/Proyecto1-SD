@@ -1,3 +1,16 @@
+'''
+----------------- Sistemas distribuidos ---------------
+Flores Nava Aurelio
+García Reyna Diego Juan Manuel Salvador
+Lugo Zabala Maximiliano
+Monciváis Aguilar Cesar
+Montejano Quirino Isay
+Pérez Cornejo Héctor Alejandro
+Rodríguez Burnes Daniel
+Villegas Castro Froylan
+---------------------------------
+'''
+
 # Crear y manejar excepciones
 from fastapi import FastAPI, HTTPException, UploadFile, File, Body
 from typing import Optional
