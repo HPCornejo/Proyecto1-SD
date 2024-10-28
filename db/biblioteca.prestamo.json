@@ -1,75 +1,30 @@
 [{
   "_id": {
-    "$oid": "6715c1c1a801038dd4211005"
+    "$oid": "671b9fdf21723952589dab14"
   },
-  "lector_id": 1,
-  "libro_id": 1,
+  "lector_id": "671b9c0c21723952589dab01",
+  "libro_id": "671b9e5321723952589dab0d",
   "fecha_prestamo": {
-    "$date": "2024-05-11T06:00:00.000Z"
+    "$date": "2024-05-24T00:00:00.000Z"
   },
   "fecha_devolucion": {
-    "$date": "2024-09-11T06:00:00.000Z"
+    "$date": "2024-05-27T00:00:00.000Z"
   },
-  "bibliotecario_id": 1,
+  "bibliotecario_id": "6715c0c1a801038dd4210fff",
   "foto_credencial": "https://sd-biblioteca.s3.us-east-2.amazonaws.com/Credenciales/id1.jpg"
 },
 {
   "_id": {
-    "$oid": "671b9f1421723952589dab11"
+    "$oid": "6715c1c1a801038dd4211005"
   },
-  "lector_id": 2,
-  "libro_id": 2,
+  "lector_id": "671b9c2d21723952589dab02",
+  "libro_id": "671b9e7321723952589dab0e",
   "fecha_prestamo": {
-    "$date": "2024-08-11T06:00:00.000Z"
+    "$date": "2024-06-05T06:00:00.000Z"
   },
   "fecha_devolucion": {
-    "$date": "2024-11-11T06:00:00.000Z"
+    "$date": "2024-06-08T06:00:00.000Z"
   },
-  "bibliotecario_id": 2,
+  "bibliotecario_id": "67170f4ebd195c90bdda28d5",
   "foto_credencial": "https://sd-biblioteca.s3.us-east-2.amazonaws.com/Credenciales/id2.jpg"
-},
-{
-  "_id": {
-    "$oid": "671b9f9321723952589dab12"
-  },
-  "lector_id": 3,
-  "libro_id": 3,
-  "fecha_prestamo": {
-    "$date": "1970-01-01T00:00:00.000Z"
-  },
-  "fecha_devolucion": {
-    "$date": "1970-01-01T00:00:00.000Z"
-  },
-  "bibliotecario_id": 3,
-  "foto_credencial": "https://sd-biblioteca.s3.us-east-2.amazonaws.com/Credenciales/id3.jpg"
-},
-{
-  "_id": {
-    "$oid": "671b9fb521723952589dab13"
-  },
-  "lector_id": 4,
-  "libro_id": 4,
-  "fecha_prestamo": {
-    "$date": "2024-12-11T06:00:00.000Z"
-  },
-  "fecha_devolucion": {
-    "$date": "1970-01-01T00:00:00.000Z"
-  },
-  "bibliotecario_id": 4,
-  "foto_credencial": "https://sd-biblioteca.s3.us-east-2.amazonaws.com/Credenciales/id4.jpg"
-},
-{
-  "_id": {
-    "$oid": "671b9fdf21723952589dab14"
-  },
-  "lector_id": 5,
-  "libro_id": 5,
-  "fecha_prestamo": {
-    "$date": "1970-01-01T00:00:00.000Z"
-  },
-  "fecha_devolucion": {
-    "$date": "1970-01-01T00:00:00.000Z"
-  },
-  "bibliotecario_id": 5,
-  "foto_credencial": "https://sd-biblioteca.s3.us-east-2.amazonaws.com/Credenciales/id5.jpg"
 }]
